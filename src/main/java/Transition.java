@@ -98,18 +98,41 @@ public class Transition {
     }
 
 
-    public static NFA star() {
-        NFA nfa = new NFA();
+    public static NFA star(NFA nfa) {
 //        An ε-transition connects initial and final state of the NFA with the sub-NFA N(s) in between.
 //        Another ε-transition from the inner final to the inner initial state of N(s) allows for repetition
 //        of expression s according to the star operator
 
+        //create new NFA to put original into
+        NFA starNFA = new NFA();
 
-        //copy transitions over
-        //add two states
-        //add epsilons
+        //new NFA has same states + 2 for the beginning and ending epsilon transitions
+        starNFA.addStates(nfa.states.size() + 2);
+
+        System.out.println("star NFA states = " + starNFA.states.size());
+
+        //copy over the original transitions
+        for(int x = 0; x< nfa.transitions.size(); x++) {
+            starNFA.transitions.add(new Transition(nfa.transitions.get(x).prior + 1, nfa.transitions.get(x).next + 1, nfa.transitions.get(x).label));
+        }
+
+        //beginning to nfa epsilon transition
+        starNFA.transitions.add(new Transition(0,1,'e'));
+        //beginning to end epsilon transition
+        starNFA.transitions.add(new Transition(0,starNFA.states.size()-1,'e'));
+        //nfa end to nfa beginning epsilon transition
+        starNFA.transitions.add(new Transition(nfa.states.size(),1,'e'));
+        //nfa to end epsilon transition
+        starNFA.transitions.add(new Transition(nfa.states.size(), starNFA.states.size()-1, 'e'));
+
+        //TESTING
+        System.out.println("union nfa size " + starNFA.states.size());
+        System.out.println("union accepting state " + starNFA.acceptingState);
+        for (int x = 0; x < starNFA.transitions.size(); x++) {
+            System.out.println("from " + starNFA.transitions.get(x).prior + " to " + starNFA.transitions.get(x).next + " symbol " + "to " + starNFA.transitions.get(x).label);
+        }
+
         return nfa;
-
     }
 
     public static void readRegex() {
@@ -134,11 +157,12 @@ public class Transition {
         //gave each character an NFA transition of 0 -> 1 for single character transition
         NFA a = new NFA('a');
         NFA b = new NFA('b');
-        NFA nfa = concat(a,b);
+//        NFA nfa = concat(a,b);
         //ab|b
-        NFA nfaUnion = union(nfa, b);
+//        NFA nfaUnion = union(nfa, b);
         //((a.b)|b).a
-        concat(nfaUnion, a);
+//        concat(nfaUnion, a);
+        star(a);
     }
 }
 
