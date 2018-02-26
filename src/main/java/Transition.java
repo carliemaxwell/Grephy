@@ -4,6 +4,7 @@ I need to create output that allows you to convert it to DOT language eventually
 */
 
 import java.util.*;
+import java.io.*;
 
 public class Transition {
 
@@ -126,13 +127,14 @@ public class Transition {
         starNFA.transitions.add(new Transition(nfa.states.size(), starNFA.states.size()-1, 'e'));
 
         //TESTING
-        System.out.println("union nfa size " + starNFA.states.size());
-        System.out.println("union accepting state " + starNFA.acceptingState);
+        System.out.println("star nfa size " + starNFA.states.size());
+        System.out.println("star accepting state " + starNFA.acceptingState);
+        System.out.println("star transition size " + starNFA.transitions.size());
         for (int x = 0; x < starNFA.transitions.size(); x++) {
             System.out.println("from " + starNFA.transitions.get(x).prior + " to " + starNFA.transitions.get(x).next + " symbol " + "to " + starNFA.transitions.get(x).label);
         }
 
-        return nfa;
+        return starNFA;
     }
 
     public static void readRegex() {
@@ -152,7 +154,51 @@ public class Transition {
         x++;
     }
 
-    public static void main(String[] args) {
+    public static void writeToFile(NFA nfa) throws IOException {
+        BufferedWriter bw = null;
+        try {
+            String dotLanguage = "digraph graphname { ";
+//            NFA a = new NFA();
+//            NFA b = new NFA();
+//            NFA nfa = union(a,b);
+            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/java/Output");
+            FileWriter fw = new FileWriter(file, true);
+            bw = new BufferedWriter(fw);
+            bw.write(dotLanguage);
+            bw.newLine();
+            for(int x=0; x< nfa.transitions.size(); x++) {
+//                append
+                System.out.println(nfa.transitions.size());
+                bw.write(nfa.transitions.get(x).prior + "->" +
+                        nfa.transitions.get(x).next + "[label=" + nfa.transitions.get(x).label + "];");
+                bw.newLine();
+            }
+            bw.write("}");
+            //append } after for loop to close graph
+
+//                FileWriter fw = new FileWriter(file,true);
+            //BufferedWriter writer give better performance
+//                BufferedWriter bw = new BufferedWriter(fw);
+//                bw.write(content);
+//                bw.append(nfa.states.get(x));
+
+            System.out.println("File written Successfully");
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        finally {
+            try {
+                if (bw != null)
+                    bw.close();
+            } catch (Exception ex) {
+                System.out.println("Error in closing the BufferedWriter" + ex);
+            }
+        }
+    }
+
+
+    public static void main(String[] args) throws IOException {
         //TEST CASES
         //gave each character an NFA transition of 0 -> 1 for single character transition
         NFA a = new NFA('a');
@@ -163,6 +209,7 @@ public class Transition {
         //((a.b)|b).a
 //        concat(nfaUnion, a);
         star(a);
+        writeToFile(star(a));
     }
 }
 
