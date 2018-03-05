@@ -137,53 +137,50 @@ public class Transition {
         return starNFA;
     }
 
-    public static void readRegex() {
-        //need grouping (stack) to combine them all
-        //ab(c*)
-        //look at a, look at next character chance to concat
-        //stacks
-        //(ab)|c
-        //    g1 - char(a) [.]?
-        //    g2 b = yes concat
-        //    replace w NFA and now do NFA | c
-        int x = 0;
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        char c = line.charAt(x);
-        NFA nfa = new NFA(c);
-        x++;
+    public static void readRegex(String regex) {
+
+        Stack<NFA> nfa = new Stack<NFA>();
+        Stack<String> symbols = new Stack<String>();
+
+        for(int x =0; x < regex.length(); x++) {
+            char ch = regex.charAt(x);
+            /*
+            if ch = (
+            if ch = letter
+            if ch = .
+            if ch = +
+            if ch = *
+            if ch = )
+            */
+        }
+        /*
+        need grouping (stack) to combine them all
+        ab(c*)
+        look at a, look at next character chance to concat
+        stacks
+        (ab)|c
+            g1 - char(a) [.]?
+            g2 b = yes concat
+            replace w NFA and now do NFA | c
+        */
     }
+
 
     public static void writeToFile(NFA nfa) throws IOException {
         BufferedWriter bw = null;
         try {
             String dotLanguage = "digraph graphname { ";
-//            NFA a = new NFA();
-//            NFA b = new NFA();
-//            NFA nfa = union(a,b);
-            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/java/Output");
+            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output");
             FileWriter fw = new FileWriter(file, true);
             bw = new BufferedWriter(fw);
             bw.write(dotLanguage);
             bw.newLine();
             for(int x=0; x< nfa.transitions.size(); x++) {
-//                append
-                System.out.println(nfa.transitions.size());
                 bw.write(nfa.transitions.get(x).prior + "->" +
                         nfa.transitions.get(x).next + "[label=" + nfa.transitions.get(x).label + "];");
                 bw.newLine();
             }
             bw.write("}");
-            //append } after for loop to close graph
-
-//                FileWriter fw = new FileWriter(file,true);
-            //BufferedWriter writer give better performance
-//                BufferedWriter bw = new BufferedWriter(fw);
-//                bw.write(content);
-//                bw.append(nfa.states.get(x));
-
-            System.out.println("File written Successfully");
-
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -192,7 +189,7 @@ public class Transition {
                 if (bw != null)
                     bw.close();
             } catch (Exception ex) {
-                System.out.println("Error in closing the BufferedWriter" + ex);
+                System.out.println("Error");
             }
         }
     }
@@ -203,13 +200,16 @@ public class Transition {
         //gave each character an NFA transition of 0 -> 1 for single character transition
         NFA a = new NFA('a');
         NFA b = new NFA('b');
-//        NFA nfa = concat(a,b);
+        NFA nfa = concat(a,b);
         //ab|b
-//        NFA nfaUnion = union(nfa, b);
+        DFA.eclosure(union(nfa, b));
         //((a.b)|b).a
-//        concat(nfaUnion, a);
-        star(a);
-        writeToFile(star(a));
+//        DFA.eclosure(concat(nfaUnion, a));
+//        star(a);
+//        concat(a,b);
+//        writeToFile(star(a));
+//        writeToFile(union(a,b));
+//        writeToFile(concat(a,b));
     }
 }
 
