@@ -17,35 +17,46 @@ public class DFA {
         this.acceptingState = 0;
     }
 
+    public void addStates(int size) {
+        for (int x = 0; x < size; x++) {
+            this.dfaStates.add(x);
+        }
+    }
 
-    public static DFA eclosure(NFA nfa) throws IOException {
-        //eclosure = stateItself --> next state reached by E --> next state reached by E ect.
+
+    public static void eclosure(NFA nfa) throws IOException {
+
         DFA dfa = new DFA();
-        boolean noEClosure = false;
-        List<String> dfaStates = new ArrayList<String>();
+        Transition currentTransition = null;
 
-        for(int x = 0; x < nfa.transitions.size(); x++) {
-            if(nfa.transitions.get(x).label != 'e') {
-                noEClosure = true;
-            } else {
-                noEClosure = false;
-            }
-        }
 
-        if(noEClosure == true) {
-            //If there are no epsilons it will be the same bc Thompson's construction doesn't have multiple transitions per symbol
-            Transition.writeToFile(nfa);
-        } else {
-            //Find eclosures for NFA
-            for (int x = 0; x < nfa.transitions.size(); x++) {
-                if (nfa.transitions.get(x).label != 'e') {
-                    dfaStates.add(String.valueOf(nfa.transitions.get(x).next));
+        //might need to change to be until there are no more next states left instead of for loop
+        int y = 0;
+        boolean inSameState = true;
+
+
+        for (int x = 0; x < nfa.transitions.size(); x++) {
+            //need it to completely restart to check all pairs again
+            System.out.println("outside if statement " + nfa.transitions.get(x).prior + " " + nfa.transitions.get(x).next);
+            if (nfa.transitions.get(x).prior == y) {
+                System.out.println("inside if statement " + nfa.transitions.get(x).prior + " " + nfa.transitions.get(x).next);
+                //want to keep same list if still one same state
+                List<Integer> eclosureSet = new ArrayList<Integer>();
+                //don't want to add in start state twice either
+                eclosureSet.add(y);
+                currentTransition = nfa.transitions.get(x);
+                System.out.println("current transition " + currentTransition.prior + " " + currentTransition.next);
+                if (currentTransition.label == 'e') {
+                    eclosureSet.add(currentTransition.next);
+                    //don't want to transition yet if there is more than 1 e per state
+                    y = currentTransition.next;
+                    System.out.print("eclosure set new " + eclosureSet);
                 } else {
-                    dfaStates.add(String.valueOf(nfa.transitions.get(x).prior + "," + nfa.transitions.get(x).next));
+                    System.out.println(currentTransition.label);
                 }
-                System.out.println("DFA state = " + dfaStates.get(x));
             }
         }
-        return dfa;
     }
 }
+
+
