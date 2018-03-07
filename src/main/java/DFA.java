@@ -23,39 +23,31 @@ public class DFA {
         }
     }
 
-
     public static void eclosure(NFA nfa) throws IOException {
 
-        DFA dfa = new DFA();
         Transition currentTransition = null;
-
-
         //might need to change to be until there are no more next states left instead of for loop
-        int y = 0;
-        boolean inSameState = true;
 
+        List<List<Integer>> eclosureSetGlobal = new ArrayList<List<Integer>>();
 
-        for (int x = 0; x < nfa.transitions.size(); x++) {
-            //need it to completely restart to check all pairs again
-            System.out.println("outside if statement " + nfa.transitions.get(x).prior + " " + nfa.transitions.get(x).next);
-            if (nfa.transitions.get(x).prior == y) {
-                System.out.println("inside if statement " + nfa.transitions.get(x).prior + " " + nfa.transitions.get(x).next);
-                //want to keep same list if still one same state
-                List<Integer> eclosureSet = new ArrayList<Integer>();
-                //don't want to add in start state twice either
-                eclosureSet.add(y);
-                currentTransition = nfa.transitions.get(x);
-                System.out.println("current transition " + currentTransition.prior + " " + currentTransition.next);
-                if (currentTransition.label == 'e') {
-                    eclosureSet.add(currentTransition.next);
-                    //don't want to transition yet if there is more than 1 e per state
-                    y = currentTransition.next;
-                    System.out.print("eclosure set new " + eclosureSet);
-                } else {
-                    System.out.println(currentTransition.label);
+        for(int a = 0; a < nfa.states.size(); a++) {
+            List<Integer> eclosureSet = new ArrayList<Integer>();
+            eclosureSet.add(a);
+            for (int x = 0; x < nfa.transitions.size(); x++) {
+                //need it to completely restart to check all pairs again
+                if (nfa.transitions.get(x).prior == a) {
+                    //want to keep same list if still one same state
+                    //don't want to add in start state twice either
+                    currentTransition = nfa.transitions.get(x);
+                    if (currentTransition.label == 'e') {
+                        eclosureSet.add(currentTransition.next);
+                    }
                 }
             }
+            eclosureSetGlobal.add(eclosureSet);
+            System.out.println(eclosureSet);
         }
+        System.out.println(eclosureSetGlobal);
     }
 }
 
