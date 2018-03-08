@@ -194,6 +194,29 @@ public class Transition {
         }
     }
 
+    public static List<Character> returnRegexCharacters(String regex) {
+
+        List<Character> characters = new ArrayList<Character>();
+
+        for(int x = 0; x < regex.length(); x++) {
+            //check if regex already has symbol and isn't a special character
+            if (regex.charAt(x) != '(' && !characters.contains(regex.charAt(x))) {
+//                    && !String.valueOf(regex.matches(String.valueOf(regex.charAt(x)))) {
+                characters.add(regex.charAt(x));
+            } else if(regex.charAt(x) != ')' && !characters.contains(regex.charAt(x))) {
+                characters.add(regex.charAt(x));
+            } else if(regex.charAt(x) != '*'&& !characters.contains(regex.charAt(x))) {
+                characters.add(regex.charAt(x));
+            } else if(regex.charAt(x) != '+' && !characters.contains(regex.charAt(x))) {
+                characters.add(regex.charAt(x));
+            } else if(regex.charAt(x) != '.' && !characters.contains(regex.charAt(x))) {
+                characters.add(regex.charAt(x));
+            }
+        }
+        return characters;
+    }
+
+
 
     public static void main(String[] args) throws IOException {
         //TEST CASES
@@ -201,11 +224,17 @@ public class Transition {
         NFA a = new NFA('a');
         NFA b = new NFA('b');
         NFA nfa = concat(a,b);
+//        DFA.eclosure(nfa);
+        List<List<Integer>> enclosureList= DFA.eclosure(union(nfa, b));
+
+//        DFA.transitionTable(enclosureList);
         //ab|b
-        DFA.eclosure(union(nfa, b));
         //((a.b)|b).a
-//        DFA.eclosure(concat(nfaUnion, a));
-//        star(a);
+//        DFA.eclosure(concat(nfa, a));
+//        NFA starNFA = star(a);
+//        NFA star = star(b);
+//        DFA.eclosure(concat(starNFA, star));
+
 //        concat(a,b);
 //        writeToFile(star(a));
 //        writeToFile(union(a,b));
