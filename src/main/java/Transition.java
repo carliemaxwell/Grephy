@@ -56,6 +56,7 @@ public class Transition {
 
 
 
+    //Can I have only 2 parameters or do I need more?
     public static NFA union(NFA first, NFA second) {
 
         //create new NFA to combine both NFA's into
@@ -194,6 +195,7 @@ public class Transition {
         }
     }
 
+    //Don't think this is necessary
     public static List<Character> returnRegexCharacters(String regex) {
 
         List<Character> characters = new ArrayList<Character>();
@@ -219,26 +221,24 @@ public class Transition {
 
 
     public static void main(String[] args) throws IOException {
+        Ingestion.alphabet();
         //TEST CASES
         //gave each character an NFA transition of 0 -> 1 for single character transition
         NFA a = new NFA('a');
         NFA b = new NFA('b');
         NFA nfa = concat(a,b);
-//        DFA.eclosure(nfa);
-        List<List<Integer>> enclosureList= DFA.eclosure(union(nfa, b));
+        NFA starNFA = star(a);
+        //Correctly prints out the NFA
+        //In other method when reading regex - convert each symbol to an NFA
+//        writeToFile(concat(a,union(a, b)));
+//
+//        //Shows enclosures for each state
+        DFA.eclosure(union(a,b));
 
-//        DFA.transitionTable(enclosureList);
-        //ab|b
-        //((a.b)|b).a
-//        DFA.eclosure(concat(nfa, a));
-//        NFA starNFA = star(a);
-//        NFA star = star(b);
-//        DFA.eclosure(concat(starNFA, star));
+        DFA.createDFA(union(a,b));
 
-//        concat(a,b);
-//        writeToFile(star(a));
-//        writeToFile(union(a,b));
-//        writeToFile(concat(a,b));
+
+//
     }
 }
 

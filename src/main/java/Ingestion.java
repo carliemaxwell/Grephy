@@ -7,11 +7,10 @@ public class Ingestion {
 
 
     private static String file;
-//    public static String alphabet = "";
-    List<String> alphabet = new ArrayList<String>();
+    public static List<Character> alphabet = new ArrayList<Character>();
     private static char character;
 
-    public List<String> alphabet() {
+    public static List<Character> alphabet() {
         try {
             System.out.println("Enter file name ");
             Scanner scanner = new Scanner(System.in);
@@ -23,26 +22,19 @@ public class Ingestion {
                 for(int y = 0; y < line.length(); y++) {
                     character = line.charAt(y);
                     System.out.println("the char is " + character);
-                    if(!this.alphabet.contains(character)) {
-                        this.alphabet.add(String.valueOf(character));
+                    //NEED TO FIX TO EXCLUDE EMPTY STRING
+                    if(!alphabet.contains(character) && !String.valueOf(character).equals("")) {
+                        alphabet.add(character);
+                        System.out.println(alphabet);
                     }
-//                    System.out.println("INDEX FOUND EQUALS " + indexFound);
-                    //WANT INDEX FOUND TO BE -1 BC THAT MEANS THE CHARACTER ISN'T IN THE ALPHABET YET
-                    //DON'T WANT TO COUNT A SPACE IN THE TEXT AS PART OF THE ALPHABET
-
-                    //MAY NOT NEED DEPENDING ON IF WE WANT CHARACTERS OR A PATTERN
-//                    if(indexFound == -1 && !Character.isWhitespace(character)) {
-//                        System.out.println("entering indexFound if statement");
-//                        alphabet.character;
-//                    }
                 }
             }
-            System.out.println("the alphabet is " + this.alphabet);
+            System.out.println("the alphabet is " + alphabet);
             ingestedFile.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
             e.printStackTrace();
         }
-        return this.alphabet;
+        return alphabet;
     }
 }

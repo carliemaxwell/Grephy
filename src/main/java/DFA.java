@@ -93,18 +93,17 @@ public class DFA {
                                 }
                             }
                         }
-//                        else {
-//
-//                            add a trap state
-//                            if (!returnedStates.contains(nfa.states.size())) {
-//                                returnedStates.add(nfa.states.size());
-//                            }
-//
                     }
                 }
-                dfa.dfaTransitions.add(new DFATransition(eclosure, returnedStates, currentChar));
-                System.out.println(dfa.dfaTransitions.get(y).prior + " " + dfa.dfaTransitions.get(y).next + " " + dfa.dfaTransitions.get(y).label);
             }
+            if(returnedStates.isEmpty()) {
+                //-1 = error state
+                returnedStates.add(-1);
+            }
+            dfa.dfaTransitions.add(new DFATransition(eclosure, returnedStates, currentChar));
+        }
+        for(int b = 0; b < dfa.dfaTransitions.size(); b++) {
+            System.out.println(dfa.dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
         }
         return dfa;
     }
