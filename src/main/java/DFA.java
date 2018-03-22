@@ -63,30 +63,19 @@ public class DFA {
 
         DFA dfa = new DFA();
 
-        List<List<Integer>> dfaStates = new ArrayList<>();
-
         //Get start state of NFA
         int startState = nfa.states.get(0);
 
         //Get eclosure of start state to begin constructing transitions
 //        List<Integer> eclosure = returnEclosureSet(startState);
 
-
         //Create list of all the states ahead of time and then run that list through the outer alphabet loop?
-
 
         for (int y = 0; y < Ingestion.alphabet.size(); y++) {
             char currentChar = Ingestion.alphabet.get(y);
-
             List<Integer> returnedStates = new ArrayList<Integer>();
-
             List<Integer> eclosure = returnEclosureSet(startState);
-
             //want to make global list of all states in DFA
-            if(!dfaStates.contains(eclosure)) {
-                dfaStates.add(eclosure);
-            }
-
             for (int x = 0; x < eclosure.size(); x++) {
                 System.out.println("Current value in eclosure set " + eclosure.get(x));
                 //Check if the transitions have that label
@@ -104,23 +93,46 @@ public class DFA {
                     }
                 }
             }
-            if(returnedStates.isEmpty()) {
+            if (returnedStates.isEmpty()) {
                 //-1 = error state
                 returnedStates.add(-1);
             }
 
             dfa.dfaTransitions.add(new DFATransition(eclosure, returnedStates, currentChar));
 
-            if(returnedStates != eclosure && !dfaStates.contains(returnedStates)) {
-                dfaStates.add(returnedStates);
+            //CURRENTLY ONLY RUNS THE NEW RETURNED SET FOR THE CHARACTER ITS ON AND NOT ALL OF THEM
+            if (returnedStates != eclosure) {
+                for (int q = 0; q < Ingestion.alphabet.size(); q++) {
+                    currentChar = Ingestion.alphabet.get(q);
+                    List<Integer> nextSubset = new ArrayList<Integer>();
+                    for (int i = 0; i < returnedStates.size(); i++) {
+                        for (int t = 0; t < nfa.transitions.size(); t++) {
+                            if (nfa.transitions.get(t).prior == returnedStates.get(i)) {
+                                if (nfa.transitions.get(t).label == currentChar) {
+                                    if (!returnedStates.contains(nfa.transitions.get(i).next)) {
+                                        List<Integer> eclosureOfNextState = returnEclosureSet(nfa.transitions.get(t).next);
+                                        System.out.println("State is " + nfa.transitions.get(t).next +
+                                                " eclosure is " + eclosureOfNextState);
+                                        for (int a = 0; a < eclosureOfNextState.size(); a++) {
+                                            nextSubset.add(eclosureOfNextState.get(a));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (nextSubset.isEmpty()) {
+                            //-1 = error state
+                            nextSubset.add(-1);
+                        }
+                    }
+                    dfa.dfaTransitions.add(new DFATransition(returnedStates, nextSubset, currentChar));
+                }
             }
         }
 
         for(int b = 0; b < dfa.dfaTransitions.size(); b++) {
             System.out.println(dfa.dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
         }
-
-        System.out.println("DFA states " + dfaStates);
 
         return dfa;
     }
