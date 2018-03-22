@@ -148,9 +148,25 @@ public class DFA {
             bw.write(dotLanguage);
             bw.newLine();
             for(int x=0; x< dfa.dfaTransitions.size(); x++) {
+
+                StringBuilder builder2 = new StringBuilder();
+                for (int m = 0; m < dfa.dfaTransitions.get(x).next.size(); m++) {
+                    builder2.append( dfa.dfaTransitions.get(x).next.get(m));
+                }
+                String result2 = builder2.toString();
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < dfa.dfaTransitions.get(x).prior.size(); i++) {
+                    builder.append( dfa.dfaTransitions.get(x).prior.get(i));
+                }
+                String result = builder.toString();
+
+
+
+                System.out.println("next result " + result2);
+
                 //NEED TO FIX TO BE A STRING FOR EACH STATE
-                bw.write(String.join(",",dfa.dfaTransitions.get(x).prior) + "->" +
-                        String.join(",",dfa.dfaTransitions.get(x).next) + "[label=" + dfa.dfaTransitions.get(x).label + "];");
+                bw.write(result + "->" + result2 + "[label=" + dfa.dfaTransitions.get(x).label + "];");
                 bw.newLine();
             }
             bw.write("}");
