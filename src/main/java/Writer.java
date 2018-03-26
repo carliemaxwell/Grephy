@@ -23,6 +23,8 @@ public class Writer {
                         nfa.transitions.get(x).next + "[label=" + nfa.transitions.get(x).label + "];");
                 bw.newLine();
             }
+            bw.write(nfa.acceptingState + "[shape=doublecircle];");
+            bw.newLine();
             bw.write("}");
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -65,7 +67,7 @@ public class Writer {
                 bw.write(result + "->" + result2 + "[label=" + dfa.dfaTransitions.get(x).label + "];");
                 bw.newLine();
             }
-            //switch accepting state back to List<List>>
+            //Do after so it only writes double circle once
             for(int k = 0; k < dfa.acceptingState.size(); k++) {
                 StringBuilder builder3 = new StringBuilder();
                 System.out.println(dfa.acceptingState.get(k));
