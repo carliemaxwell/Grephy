@@ -21,18 +21,9 @@ public class DFA {
         this.acceptingState = new ArrayList<Integer>();
     }
 
-
-    public void addStates(int size) {
-        for (int x = 0; x < size; x++) {
-            this.dfaStates.add(x);
-        }
-    }
-
-    //NEED TO FIX TO INCLUDE ALL ECLOSURES (IF 0-1-4 AND 4-7, NEED TO INCLUDE 7)
-    public static List<List<Integer>> eclosure(NFA nfa) throws IOException {
+    public static void eclosure(NFA nfa) throws IOException {
 
         Transition currentTransition = null;
-        List<List<Integer>> eclosureSetGlobal = new ArrayList<List<Integer>>();
 
         for (int a = 0; a < nfa.states.size(); a++) {
             List<Integer> eclosureSet = new ArrayList<Integer>();
@@ -47,27 +38,11 @@ public class DFA {
                             eclosureSet.add(currentTransition.next);
                         }
                     }
-                    //NEED TO COME UP WITH SOLUTION TO CONTINUOUSLY LOOP TO THE NEXT TRANS WHEN LABEL = 'E'
-//                    System.out.println("before entering second loop, current tran = " + currentTransition.next);
-//                    for(int y =0; y < nfa.transitions.size(); y++) {
-//                        if(nfa.transitions.get(y).prior == currentTransition.next) {
-//                            System.out.println("Prior " + nfa.transitions.get(y).prior + " next " + currentTransition.next);
-//                            newCurrentTransition = nfa.transitions.get(y);
-//                            if(newCurrentTransition.label == 'e') {
-//                                eclosureSet.add(newCurrentTransition.next);
-//                                System.out.println("added " + newCurrentTransition.next);
-//                            } else {
-//                                System.out.println("Didnt add, current set = " + eclosureSet);
-//                            }
-//                        }
-//                    }
                 }
             }
             //ADDS STATE W/ ECLOSURE TO HASHMAP TO BE USED FOR SUBSET CONSTRUCTION
             statesAndEclosures.put(eclosureSet.get(0), eclosureSet);
-            eclosureSetGlobal.add(eclosureSet);
         }
-
 
         for (int y = nfa.states.size() - 1; y >= 0; y--) {
             List<Integer> eclosures = returnEclosureSet(y);
@@ -83,35 +58,30 @@ public class DFA {
                 statesAndEclosures.put(y, eclosures);
             }
         }
-
         System.out.println(statesAndEclosures);
-        return eclosureSetGlobal;
     }
-
-
 
     public static List<Integer> returnEclosureSet(int state) {
         List eclosureOfState = statesAndEclosures.get(state);
         return eclosureOfState;
     }
 
-    public static DFA createDFA(NFA nfa) {
+    public DFA createDFA(NFA nfa) throws IOException {
+
+        //NEED TO CALL TO CREATE HASHMAP OF STATES, ECLOSURES (use in returnEclosureSet)
+        eclosure(nfa);
 
         DFA dfa = new DFA();
 
         //Get start state of NFA
         int startState = nfa.states.get(0);
 
-        //Get eclosure of start state to begin constructing transitions
-//        List<Integer> eclosure = returnEclosureSet(startState);
-
         //Create list of all the states ahead of time and then run that list through the outer alphabet loop?
-
         for (int y = 0; y < Ingestion.alphabet.size(); y++) {
             char currentChar = Ingestion.alphabet.get(y);
             List<Integer> returnedStates = new ArrayList<Integer>();
             List<Integer> eclosure = returnEclosureSet(startState);
-            //want to make global list of all states in DFA
+            //Want to make global list of all states in DFA
             for (int x = 0; x < eclosure.size(); x++) {
                 System.out.println("Current value in eclosure set " + eclosure.get(x));
                 //Check if the transitions have that label
@@ -170,48 +140,6 @@ public class DFA {
             System.out.println(dfa.dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
         }
         return dfa;
-    }
-
-
-    public static void writeToFileDFA(DFA dfa) throws IOException {
-        BufferedWriter bw = null;
-        try {
-            String dotLanguage = "digraph graphname { ";
-            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output");
-            FileWriter fw = new FileWriter(file, true);
-            bw = new BufferedWriter(fw);
-            bw.write(dotLanguage);
-            bw.newLine();
-            for(int x=0; x< dfa.dfaTransitions.size(); x++) {
-
-                StringBuilder builder2 = new StringBuilder();
-                for (int m = 0; m < dfa.dfaTransitions.get(x).next.size(); m++) {
-                    builder2.append( dfa.dfaTransitions.get(x).next.get(m));
-                }
-                String result2 = builder2.toString();
-
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < dfa.dfaTransitions.get(x).prior.size(); i++) {
-                    builder.append( dfa.dfaTransitions.get(x).prior.get(i));
-                }
-                String result = builder.toString();
-
-                //NEED TO FIX TO BE A STRING FOR EACH STATE
-                bw.write(result + "->" + result2 + "[label=" + dfa.dfaTransitions.get(x).label + "];");
-                bw.newLine();
-            }
-            bw.write("}");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-        finally {
-            try {
-                if (bw != null)
-                    bw.close();
-            } catch (Exception ex) {
-                System.out.println("Error");
-            }
-        }
     }
 }
 
