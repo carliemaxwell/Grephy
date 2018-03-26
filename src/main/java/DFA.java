@@ -61,12 +61,15 @@ public class DFA {
         System.out.println(statesAndEclosures);
     }
 
+
     public static List<Integer> returnEclosureSet(int state) {
         List eclosureOfState = statesAndEclosures.get(state);
         return eclosureOfState;
     }
 
-    public DFA createDFA(NFA nfa) throws IOException {
+
+
+    public static DFA createDFA(NFA nfa) throws IOException {
 
         //NEED TO CALL TO CREATE HASHMAP OF STATES, ECLOSURES (use in returnEclosureSet)
         eclosure(nfa);
@@ -114,23 +117,24 @@ public class DFA {
                     for (int i = 0; i < returnedStates.size(); i++) {
                         for (int t = 0; t < nfa.transitions.size(); t++) {
                             if (nfa.transitions.get(t).prior == returnedStates.get(i)) {
+                                System.out.println(nfa.transitions.get(t).prior + " " + returnedStates.get(i));
+                                System.out.println(nfa.transitions.get(t).label);
                                 if (nfa.transitions.get(t).label == currentChar) {
-                                    if (!returnedStates.contains(nfa.transitions.get(i).next)) {
-                                        List<Integer> eclosureOfNextState = returnEclosureSet(nfa.transitions.get(t).next);
-                                        System.out.println("State is " + nfa.transitions.get(t).next +
-                                                " eclosure is " + eclosureOfNextState);
-                                        for (int a = 0; a < eclosureOfNextState.size(); a++) {
-                                            nextSubset.add(eclosureOfNextState.get(a));
+                                    List<Integer> eclosureFound = returnEclosureSet(nfa.transitions.get(t).next);
+                                    for (int b = 0; b < eclosureFound.size(); b++) {
+                                        if (!nextSubset.contains(eclosureFound.get(b))) {
+                                            nextSubset.add(eclosureFound.get(b));
                                         }
                                     }
                                 }
                             }
                         }
+                    }
                         if (nextSubset.isEmpty()) {
                             //-1 = error state
                             nextSubset.add(-1);
                         }
-                    }
+
                     dfa.dfaTransitions.add(new DFATransition(returnedStates, nextSubset, currentChar));
                 }
             }
@@ -139,6 +143,7 @@ public class DFA {
         for(int b = 0; b < dfa.dfaTransitions.size(); b++) {
             System.out.println(dfa.dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
         }
+        Writer.writeToFileDFA(dfa);
         return dfa;
     }
 }
