@@ -166,35 +166,6 @@ public class Transition {
         */
     }
 
-
-    public static void writeToFile(NFA nfa) throws IOException {
-        BufferedWriter bw = null;
-        try {
-            String dotLanguage = "digraph graphname { ";
-            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output");
-            FileWriter fw = new FileWriter(file, true);
-            bw = new BufferedWriter(fw);
-            bw.write(dotLanguage);
-            bw.newLine();
-            for(int x=0; x< nfa.transitions.size(); x++) {
-                bw.write(nfa.transitions.get(x).prior + "->" +
-                        nfa.transitions.get(x).next + "[label=" + nfa.transitions.get(x).label + "];");
-                bw.newLine();
-            }
-            bw.write("}");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-        finally {
-            try {
-                if (bw != null)
-                    bw.close();
-            } catch (Exception ex) {
-                System.out.println("Error");
-            }
-        }
-    }
-
     //Don't think this is necessary
     public static List<Character> returnRegexCharacters(String regex) {
 
@@ -219,26 +190,30 @@ public class Transition {
     }
 
 
-
     public static void main(String[] args) throws IOException {
+        //GET ALPHABET FROM FILE
         Ingestion.alphabet();
-        //TEST CASES
-        //gave each character an NFA transition of 0 -> 1 for single character transition
+
+        //CREATE NFA'S TO TEST METHODS WITH
         NFA a = new NFA('a');
         NFA b = new NFA('b');
         NFA nfa = concat(a,b);
         NFA starNFA = star(a);
-        //Correctly prints out the NFA
-        //In other method when reading regex - convert each symbol to an NFA
-//        writeToFile(concat(a,union(a, b)));
-//
-//        //Shows enclosures for each state
-        DFA.eclosure(union(a,b));
 
-        DFA.createDFA(union(a,b));
+        //NEED TO CALL ECLOSURE TO CREATE HASHMAP
+//        DFA.eclosure(union(a,b));
+        DFA.eclosure(star(union(a,b)));
+        Writer.writeToFileNFA(star(union(a,b)));
+//        DFA.eclosure(concat(a, union(star(a),b)));
+//        DFA.eclosure(union(star(a),b));
+
+        //NEED TO CALL CREATE DFA TO TEST METHOD
+//        DFA.createDFA(union(star(a),b));
 
 
-//
+        //TEST OUTPUT METHODS
+//      writeToFile(concat(a,union(a, b)));
+//      DFA.writeToFileDFA(DFA.createDFA(union(a,b)));
     }
 }
 
