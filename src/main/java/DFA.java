@@ -28,6 +28,7 @@ public class DFA {
         }
     }
 
+    //NEED TO FIX TO INCLUDE ALL ECLOSURES (IF 0-1-4 AND 4-7, NEED TO INCLUDE 7)
     public static List<List<Integer>> eclosure(NFA nfa) throws IOException {
 
         Transition currentTransition = null;
@@ -36,23 +37,58 @@ public class DFA {
         for (int a = 0; a < nfa.states.size(); a++) {
             List<Integer> eclosureSet = new ArrayList<Integer>();
             eclosureSet.add(a);
+            System.out.println("Current state " + a);
             for (int x = 0; x < nfa.transitions.size(); x++) {
                 if (nfa.transitions.get(x).prior == a) {
                     currentTransition = nfa.transitions.get(x);
                     if (currentTransition.label == 'e') {
+                        System.out.println("current transition being added " + currentTransition.prior + " " + currentTransition.next);
                         if (!eclosureSet.contains(currentTransition.next)) {
                             eclosureSet.add(currentTransition.next);
                         }
                     }
+                    //NEED TO COME UP WITH SOLUTION TO CONTINUOUSLY LOOP TO THE NEXT TRANS WHEN LABEL = 'E'
+//                    System.out.println("before entering second loop, current tran = " + currentTransition.next);
+//                    for(int y =0; y < nfa.transitions.size(); y++) {
+//                        if(nfa.transitions.get(y).prior == currentTransition.next) {
+//                            System.out.println("Prior " + nfa.transitions.get(y).prior + " next " + currentTransition.next);
+//                            newCurrentTransition = nfa.transitions.get(y);
+//                            if(newCurrentTransition.label == 'e') {
+//                                eclosureSet.add(newCurrentTransition.next);
+//                                System.out.println("added " + newCurrentTransition.next);
+//                            } else {
+//                                System.out.println("Didnt add, current set = " + eclosureSet);
+//                            }
+//                        }
+//                    }
                 }
             }
+            //ADDS STATE W/ ECLOSURE TO HASHMAP TO BE USED FOR SUBSET CONSTRUCTION
             statesAndEclosures.put(eclosureSet.get(0), eclosureSet);
             eclosureSetGlobal.add(eclosureSet);
-            System.out.println(eclosureSet);
         }
+
+
+        for (int y = nfa.states.size() - 1; y >= 0; y--) {
+            List<Integer> eclosures = returnEclosureSet(y);
+            //For state 7, return inside nums one by one and replace w/ eclosure
+            for(int z =0; z < eclosures.size(); z++) {
+                int num = eclosures.get(z);
+                List<Integer> returnSet = returnEclosureSet(num);
+                for(int i = 0; i < returnSet.size(); i++) {
+                    if(!eclosures.contains(returnSet.get(i))) {
+                        eclosures.add(returnSet.get(i));
+                    }
+                }
+                statesAndEclosures.put(y, eclosures);
+            }
+        }
+
         System.out.println(statesAndEclosures);
         return eclosureSetGlobal;
     }
+
+
 
     public static List<Integer> returnEclosureSet(int state) {
         List eclosureOfState = statesAndEclosures.get(state);
@@ -133,7 +169,6 @@ public class DFA {
         for(int b = 0; b < dfa.dfaTransitions.size(); b++) {
             System.out.println(dfa.dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
         }
-
         return dfa;
     }
 
@@ -160,10 +195,6 @@ public class DFA {
                     builder.append( dfa.dfaTransitions.get(x).prior.get(i));
                 }
                 String result = builder.toString();
-
-
-
-                System.out.println("next result " + result2);
 
                 //NEED TO FIX TO BE A STRING FOR EACH STATE
                 bw.write(result + "->" + result2 + "[label=" + dfa.dfaTransitions.get(x).label + "];");
