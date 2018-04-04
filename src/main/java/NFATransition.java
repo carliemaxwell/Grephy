@@ -6,14 +6,14 @@ I need to create output that allows you to convert it to DOT language eventually
 import java.util.*;
 import java.io.*;
 
-public class Transition {
+public class NFATransition {
 
     public int prior;
     public int next;
     public char label;  //used the word label bc that is the character in DOT language
 
 
-    public Transition(int from, int to, char label) {
+    public NFATransition(int from, int to, char label) {
         //A transition consists of from --> to with character label
         this.prior = from;
         this.next = to;
@@ -23,20 +23,20 @@ public class Transition {
 
     public static NFA concat(NFA first, NFA second) {
 
-        //create new DFA to combine the DFAs
+        //create new DFATransition to combine the DFAs
         NFA con = new NFA();
 
         //add in first nfa and all of second nfa except starting state
         con.addStates(first.states.size() + (second.states.size() - 1));
 
-        //put all of first into new DFA
+        //put all of first into new DFATransition
         for(int x = 0; x < first.transitions.size(); x++) {
             con.transitions.add(first.transitions.get(x));
         }
 
         //update second NFA to be shifted right first.states.size()-1 bc needs to start at end of first states
         for(int x = 0; x < second.transitions.size(); x++) {
-            con.transitions.add(new Transition(second.transitions.get(x).prior + first.states.size()-1,
+            con.transitions.add(new NFATransition(second.transitions.get(x).prior + first.states.size()-1,
                     second.transitions.get(x).next + first.states.size()-1, second.transitions.get(x).label));
         }
 
@@ -67,23 +67,24 @@ public class Transition {
 
         //shift first nfa up 1 and add to unionNFA
         for(int x = 0; x < first.transitions.size(); x++) {
-            unionNFA.transitions.add(new Transition(first.transitions.get(x).prior + 1,
+            unionNFA.transitions.add(new NFATransition(first.transitions.get(x).prior + 1,
                     first.transitions.get(x).next + 1, first.transitions.get(x).label));
         }
 
         //shift second nfa up 1 + first state amount and add to unionNFA
         for(int y=0; y< second.transitions.size(); y++) {
-            unionNFA.transitions.add(new Transition(second.transitions.get(y).prior + first.states.size()+1,
+            unionNFA.transitions.add(new NFATransition(second.transitions.get(y).prior + first.states.size()+1,
                     second.transitions.get(y).next + first.states.size()+1, second.transitions.get(y).label));
         }
 
         //add beginning epsilons, need to shift first by 1 and second by amount in first+1
-        unionNFA.transitions.add(new Transition(0,1,'e'));
-        unionNFA.transitions.add(new Transition(0,first.states.size()+1,'e'));
+        //NEED TO CHANGE E
+        unionNFA.transitions.add(new NFATransition(0,1,'ε'));
+        unionNFA.transitions.add(new NFATransition(0,first.states.size()+1,'ε'));
 
         //add ending epsilons
-        unionNFA.transitions.add(new Transition(first.states.size(), unionNFA.states.size()-1, 'e'));
-        unionNFA.transitions.add(new Transition(unionNFA.states.size() - 2, unionNFA.states.size()-1, 'e'));
+        unionNFA.transitions.add(new NFATransition(first.states.size(), unionNFA.states.size()-1, 'ε'));
+        unionNFA.transitions.add(new NFATransition(unionNFA.states.size() - 2, unionNFA.states.size()-1, 'ε'));
 
         //declare accepting state for new NFA
         unionNFA.acceptingState = unionNFA.states.size() - 1;
@@ -115,17 +116,20 @@ public class Transition {
 
         //copy over the original transitions
         for(int x = 0; x< nfa.transitions.size(); x++) {
-            starNFA.transitions.add(new Transition(nfa.transitions.get(x).prior + 1, nfa.transitions.get(x).next + 1, nfa.transitions.get(x).label));
+            starNFA.transitions.add(new NFATransition(nfa.transitions.get(x).prior + 1, nfa.transitions.get(x).next + 1, nfa.transitions.get(x).label));
         }
 
         //beginning to nfa epsilon transition
-        starNFA.transitions.add(new Transition(0,1,'e'));
+        starNFA.transitions.add(new NFATransition(0,1,'ε'));
         //beginning to end epsilon transition
-        starNFA.transitions.add(new Transition(0,starNFA.states.size()-1,'e'));
+        starNFA.transitions.add(new NFATransition(0,starNFA.states.size()-1,'ε'));
         //nfa end to nfa beginning epsilon transition
-        starNFA.transitions.add(new Transition(nfa.states.size(),1,'e'));
+        starNFA.transitions.add(new NFATransition(nfa.states.size(),1,'ε'));
         //nfa to end epsilon transition
-        starNFA.transitions.add(new Transition(nfa.states.size(), starNFA.states.size()-1, 'e'));
+        starNFA.transitions.add(new NFATransition(nfa.states.size(), starNFA.states.size()-1, 'ε'));
+
+        //declare accepting state
+        starNFA.acceptingState = starNFA.states.size()-1;
 
         //TESTING
         System.out.println("star nfa size " + starNFA.states.size());
@@ -138,82 +142,67 @@ public class Transition {
         return starNFA;
     }
 
-    public static void readRegex(String regex) {
+    public static NFA readRegex(String regex) {
 
-        Stack<NFA> nfa = new Stack<NFA>();
-        Stack<String> symbols = new Stack<String>();
-
-        for(int x =0; x < regex.length(); x++) {
-            char ch = regex.charAt(x);
-            /*
-            if ch = (
-            if ch = letter
-            if ch = .
-            if ch = +
-            if ch = *
-            if ch = )
-            */
-        }
-        /*
-        need grouping (stack) to combine them all
-        ab(c*)
-        look at a, look at next character chance to concat
-        stacks
-        (ab)|c
-            g1 - char(a) [.]?
-            g2 b = yes concat
-            replace w NFA and now do NFA | c
-        */
-    }
-
-    //Don't think this is necessary
-    public static List<Character> returnRegexCharacters(String regex) {
-
-        List<Character> characters = new ArrayList<Character>();
+        Stack<NFA> characterStack = new Stack();
+        Stack symbolStack = new Stack();
 
         for(int x = 0; x < regex.length(); x++) {
-            //check if regex already has symbol and isn't a special character
-            if (regex.charAt(x) != '(' && !characters.contains(regex.charAt(x))) {
-//                    && !String.valueOf(regex.matches(String.valueOf(regex.charAt(x)))) {
-                characters.add(regex.charAt(x));
-            } else if(regex.charAt(x) != ')' && !characters.contains(regex.charAt(x))) {
-                characters.add(regex.charAt(x));
-            } else if(regex.charAt(x) != '*'&& !characters.contains(regex.charAt(x))) {
-                characters.add(regex.charAt(x));
-            } else if(regex.charAt(x) != '+' && !characters.contains(regex.charAt(x))) {
-                characters.add(regex.charAt(x));
-            } else if(regex.charAt(x) != '.' && !characters.contains(regex.charAt(x))) {
-                characters.add(regex.charAt(x));
+
+            if (regex.charAt(x) == '(') {
+                while (regex.charAt(x) != ')') {
+                    while (regex.charAt(x) != '+' || regex.charAt(x) != '*') {
+                        NFA nfa = new NFA(regex.charAt(x));
+                        characterStack.add(nfa);
+                    }
+                }
             }
         }
-        return characters;
+
+            if(characterStack.size() == 1) {
+                return characterStack.get(0);
+            }
+
+            if(characterStack.size() == 2) {
+                NFA nfa = concat(characterStack.get(0), characterStack.get(1));
+                return nfa;
+            }
+
+            return null;
     }
 
 
     public static void main(String[] args) throws IOException {
+
+        //NEED TO DO ARGS FOR Grep [-n NFA-FILE] [-d DFATransition-FILE] REGEX FILE
+
         //GET ALPHABET FROM FILE
         Ingestion.alphabet();
 
         //CREATE NFA'S TO TEST METHODS WITH
         NFA a = new NFA('a');
         NFA b = new NFA('b');
-        NFA nfa = concat(a,b);
-        NFA starNFA = star(a);
+        NFA c = new NFA('c');
+
+//        NFA nfa = concat(a,b);
+
+        DFATransition.createDFA(star(a));
+
 
         //NEED TO CALL ECLOSURE TO CREATE HASHMAP
-//        DFA.eclosure(union(a,b));
-        DFA.eclosure(star(union(a,b)));
-        Writer.writeToFileNFA(star(union(a,b)));
-//        DFA.eclosure(concat(a, union(star(a),b)));
-//        DFA.eclosure(union(star(a),b));
+//        DFATransition.eclosure(union(a,b));
+//        DFATransition.eclosure(star(union(a,b)));
+//        Writer.writeToFileNFA(star(union(a,b)));
+//        DFATransition.eclosure(concat(a, union(star(a),b)));
+//        DFATransition.eclosure(union(star(a),b));
 
-        //NEED TO CALL CREATE DFA TO TEST METHOD
-//        DFA.createDFA(union(star(a),b));
+        //NEED TO CALL CREATE DFATransition TO TEST METHOD
+//        DFATransition.createDFA(union(star(a),b));
 
 
         //TEST OUTPUT METHODS
 //      writeToFile(concat(a,union(a, b)));
-//      DFA.writeToFileDFA(DFA.createDFA(union(a,b)));
+//      DFATransition.writeToFileDFA(DFATransition.createDFA(union(a,b)));
     }
 }
 

@@ -18,14 +18,11 @@ public class Ingestion {
             Scanner ingestedFile = new Scanner(new FileInputStream(file));
             while(ingestedFile.hasNextLine()) {
                 String line = ingestedFile.nextLine();
-                System.out.println("the line is " + line);
                 for(int y = 0; y < line.length(); y++) {
                     character = line.charAt(y);
-                    System.out.println("the char is " + character);
                     //NEED TO FIX TO EXCLUDE EMPTY STRING
                     if(!alphabet.contains(character) && !String.valueOf(character).equals("")) {
                         alphabet.add(character);
-                        System.out.println(alphabet);
                     }
                 }
             }

@@ -2,8 +2,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Writer {
 
@@ -39,7 +37,7 @@ public class Writer {
         }
     }
 
-    public static void writeToFileDFA(DFA dfa) throws IOException {
+    public static void writeToFileDFA(DFATransition dfa) throws IOException {
         BufferedWriter bw = null;
         try {
             String dotLanguage = "digraph graphname { ";
@@ -70,12 +68,12 @@ public class Writer {
             //Do after so it only writes double circle once
             for(int k = 0; k < dfa.acceptingState.size(); k++) {
                 StringBuilder builder3 = new StringBuilder();
-                System.out.println(dfa.acceptingState.get(k));
+//                System.out.println(dfa.acceptingState.get(k));
                 for(int g = 0; g < dfa.acceptingState.get(k).size(); g++){
                     builder3.append(dfa.acceptingState.get(k).get(g));
                 }
                 String result3 = builder3.toString();
-                System.out.println(result3);
+//                System.out.println(result3);
                 bw.write(result3 + "[shape=doublecircle];");
                 bw.newLine();
             }
