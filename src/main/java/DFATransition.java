@@ -208,7 +208,7 @@ public class DFATransition {
     public static void createLine() {
 
         //Need to fix to get from file (testing for now)
-        String allCharacters = "abcd/ngf/nkoi";
+        String allCharacters = "ab/nc";
 
         String[] lines = allCharacters.split("/n");
         for (String line : lines) {
@@ -219,24 +219,41 @@ public class DFATransition {
 
     public static void testDFA(String line) {
         String acceptOrReject = "";
-        boolean accept = true;
-        boolean reject = true;
 
+        List<Integer> startState;
 
+        List<List<Integer>> statesIncluded = new ArrayList<>();
 
-
-        if(accept) {
-            acceptOrReject = "accept";
+        int y = 0;
+        startState = dfaTransitions.get(0).prior;
+        statesIncluded.add(startState);
+        for (int x = 0; x < dfaTransitions.size(); x++) {
+            if (dfaTransitions.get(x).prior == startState) {
+                System.out.println(dfaTransitions.get(x).prior + " " + dfaTransitions.get(x).next);
+                if(y < line.length()) {
+                    if (dfaTransitions.get(x).label == line.charAt(y)) {
+                        //move on to next character
+                        y++;
+                        //find next transition w/ next symbol
+                        startState = dfaTransitions.get(x).next;
+                        statesIncluded.add(startState);
+                    }
+                }
+            }
         }
 
-        if(reject) {
+        System.out.println("All states " + statesIncluded);
+
+        if(acceptingState.contains(statesIncluded.get(statesIncluded.size()-1))) {
+            acceptOrReject = "accept";
+        } else {
             acceptOrReject = "reject";
         }
 
         System.out.println(acceptOrReject);
-
     }
 }
+
 
 
 
