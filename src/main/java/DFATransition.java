@@ -99,7 +99,6 @@ public class DFATransition {
             dfaTransitions.add(new DFA(eclosure, newSubset, currentChar));
 
 
-
             if (newSubset.contains(nfa.acceptingState)) {
                 if (!acceptingState.contains(newSubset)) {
                     acceptingState.add(newSubset);
@@ -161,11 +160,6 @@ public class DFATransition {
             }
 
 
-//            if(returnedStates != eclosure) {
-//                findSubset(nfa, returnedStates);
-//            }
-
-
             if(!newStates.contains(eclosure)) {
                 newStates.add(eclosure);
             }
@@ -190,34 +184,15 @@ public class DFATransition {
                 }
             }
 
-//            if(returnedStates != eclosure) {
-//                findSubset(nfa, returnedStates);
-//            }
-
-
-
-//            for(int q = 0; q < newStates.size(); q++) {
-//                if(eclosure != newStates.get(q)) {
-////                    createDFA(nfa, newStates.get(q));
-//                }
-//            }
-
-//            if(returnedStates != eclosure) {
-//                newSetConstruction(returnedStates, nfa);
-//            }
-
         }
 
-        //start at 1 bc don't want eclosure
+
+        //add to newStates in findSubset ends up doing all of the states eventually
         for(int g = 1; g < newStates.size(); g++) {
-            System.out.println(nfa);
-            System.out.println(newStates.get(g));
+            System.out.println("new state size " + newStates.size());
+            System.out.println(g);
             findSubset(nfa, newStates.get(g));
         }
-
-
-        System.out.println("new States");
-        System.out.println(newStates);
 
 
         System.out.println("DFATransitions:");
@@ -225,47 +200,42 @@ public class DFATransition {
             System.out.println(dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
         }
 
-//        System.out.println("NewStates Created");
-//        System.out.println(newStates);
-
-
-
-
-
         Writer.writeToFileDFA(dfa);
         return dfa;
     }
 
-//    public static List<Integer> newSetConstruction(List<Integer> differentSet, NFA nfa, DFA dfa) {
-//        List<Integer> newSubset = new ArrayList<>();
-//        for(int x =0; x < Ingestion.alphabet.size(); x++) {
-//            char currentChar = Ingestion.alphabet.get(x);
-//            for(int y=0; y < differentSet.size(); y++) {
-//                for (int z = 0; z < nfa.transitions.size(); z++) {
-//                    if(nfa.transitions.get(z).prior == differentSet.get(y)) {
-//                        if(nfa.transitions.get(z).label == currentChar) {
-//                            List<Integer> eclosure = returnEclosureSet(nfa.transitions.get(x).next);
-//                            addEclosureToSet(newSubset, eclosure);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        dfa.dfaTransitions.add(new DFA(eclosure, returnedStates, currentChar));
-//
-//
-//        if(newSubset != differentSet) {
-//            return newSetConstruction(newSubset, nfa, dfa);
-//        }
-//        return newSubset;
-//    }
-//
-//    public static void addEclosureToSet(List<Integer> newSet, List<Integer> eclosure) {
-//        for(int x = 0; x < eclosure.size(); x++) {
-//            newSet.add(eclosure.get(x));
-//        }
-//    }
+
+    public static void createLine() {
+
+        //Need to fix to get from file (testing for now)
+        String allCharacters = "abcd/ngf/nkoi";
+
+        String[] lines = allCharacters.split("/n");
+        for (String line : lines) {
+            System.out.println(line);
+            testDFA(line);
+        }
+    }
+
+    public static void testDFA(String line) {
+        String acceptOrReject = "";
+        boolean accept = true;
+        boolean reject = true;
+
+
+
+
+        if(accept) {
+            acceptOrReject = "accept";
+        }
+
+        if(reject) {
+            acceptOrReject = "reject";
+        }
+
+        System.out.println(acceptOrReject);
+
+    }
 }
 
 
