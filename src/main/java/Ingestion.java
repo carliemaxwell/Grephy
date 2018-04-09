@@ -10,7 +10,8 @@ public class Ingestion {
     public static List<Character> alphabet = new ArrayList<Character>();
     private static char character;
 
-    public static List<Character> alphabet() {
+
+    public static void alphabet() {
         try {
             System.out.println("Enter file name ");
             Scanner scanner = new Scanner(System.in);
@@ -18,11 +19,19 @@ public class Ingestion {
             Scanner ingestedFile = new Scanner(new FileInputStream(file));
             while(ingestedFile.hasNextLine()) {
                 String line = ingestedFile.nextLine();
-                for(int y = 0; y < line.length(); y++) {
-                    character = line.charAt(y);
-                    //NEED TO FIX TO EXCLUDE EMPTY STRING
-                    if(!alphabet.contains(character) && !String.valueOf(character).equals("")) {
-                        alphabet.add(character);
+                for (int y = 0; y < line.length(); y++) {
+//                    character = line.charAt(y);
+                    //NEED TO FIX TO EXCLUDE /n
+                    if (y < line.length()) {
+                        if (line.charAt(y) == '/') {
+                            if (line.charAt(y + 1) == 'n') {
+                                y++;
+                            }
+                        } else {
+                            if (!alphabet.contains(line.charAt(y)) && !String.valueOf(y).equals("")) {
+                                alphabet.add(line.charAt(y));
+                            }
+                        }
                     }
                 }
             }
@@ -32,6 +41,5 @@ public class Ingestion {
             System.out.println("File not found.");
             e.printStackTrace();
         }
-        return alphabet;
     }
 }
