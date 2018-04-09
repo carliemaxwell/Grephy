@@ -157,16 +157,16 @@ public class NFATransition {
                     }
                 }
             }
-        }
 
-            if(characterStack.size() == 1) {
+            if (characterStack.size() == 1) {
                 return characterStack.get(0);
             }
 
-            if(characterStack.size() == 2) {
+            if (characterStack.size() == 2) {
                 NFA nfa = concat(characterStack.get(0), characterStack.get(1));
                 return nfa;
             }
+        }
 
             return null;
     }
@@ -174,10 +174,16 @@ public class NFATransition {
 
     public static void main(String[] args) throws IOException {
 
+
+//        File file = new File(args[0]);
+
         //NEED TO DO ARGS FOR Grep [-n NFA-FILE] [-d DFATransition-FILE] REGEX FILE
+        String file = "testFile";
 
         //GET ALPHABET FROM FILE
-        Ingestion.alphabet();
+        Ingestion.alphabet(file);
+
+//        DFATransition.createLine();
 
         //CREATE NFA'S TO TEST METHODS WITH
         NFA a = new NFA('a');
@@ -186,19 +192,12 @@ public class NFATransition {
 
 //        NFA nfa = concat(a,b);
 
-        DFATransition.createDFA(star(a));
+        DFATransition.createDFA(union(concat(a,b), c));
 
+        DFATransition.createLine(file);
 
-        //NEED TO CALL ECLOSURE TO CREATE HASHMAP
-//        DFATransition.eclosure(union(a,b));
-//        DFATransition.eclosure(star(union(a,b)));
-//        Writer.writeToFileNFA(star(union(a,b)));
-//        DFATransition.eclosure(concat(a, union(star(a),b)));
-//        DFATransition.eclosure(union(star(a),b));
-
-        //NEED TO CALL CREATE DFATransition TO TEST METHOD
-//        DFATransition.createDFA(union(star(a),b));
-
+        //TAKES IN PARAMS OF FILE
+//        DFATransition.createLine(Ingestion.alphabet());
 
         //TEST OUTPUT METHODS
 //      writeToFile(concat(a,union(a, b)));

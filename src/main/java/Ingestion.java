@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -6,21 +7,18 @@ import java.util.*;
 public class Ingestion {
 
 
-    private static String file;
     public static List<Character> alphabet = new ArrayList<Character>();
-    private static char character;
 
 
-    public static void alphabet() {
+    public static void alphabet(String file) {
         try {
-            System.out.println("Enter file name ");
-            Scanner scanner = new Scanner(System.in);
-            file = scanner.next();
+//            System.out.println("Enter file name ");
+//            Scanner scanner = new Scanner(System.in);
+//            file = scanner.next();
             Scanner ingestedFile = new Scanner(new FileInputStream(file));
             while(ingestedFile.hasNextLine()) {
                 String line = ingestedFile.nextLine();
                 for (int y = 0; y < line.length(); y++) {
-                    //NEED TO FIX TO EXCLUDE /n
                     if (y < line.length()) {
                         if (line.charAt(y) == '/') {
                             if (line.charAt(y + 1) == 'n') {

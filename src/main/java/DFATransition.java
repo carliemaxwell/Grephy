@@ -205,18 +205,22 @@ public class DFATransition {
         return dfa;
     }
 
-
-    public static void createLine(Scanner ingestedFile) {
+    //TAKES IN THE FILE PARAMETER FROM ARGS IN MAIN METHOD SO IT DOESNT RUN ALPHABET AGAIN
+    public static void createLine(String file) throws FileNotFoundException {
         String allChar = "";
-        //Need to fix to get from file (testing for now)
+
+        Scanner ingestedFile = new Scanner(new FileInputStream(file));
         while(ingestedFile.hasNextLine()) {
             String line = ingestedFile.nextLine();
             for(int y = 0; y < line.length(); y++) {
                 char character = line.charAt(y);
-                allChar += character;
+                if(character != ' ') {
+                    allChar += character;
+                }
             }
         }
         ingestedFile.close();
+        System.out.println("all characters " + allChar);
         String[] lines = allChar.split("/n");
         for (String line : lines) {
             System.out.println(line);
