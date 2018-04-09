@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 public class DFATransition {
 
@@ -205,12 +206,18 @@ public class DFATransition {
     }
 
 
-    public static void createLine() {
-
+    public static void createLine(Scanner ingestedFile) {
+        String allChar = "";
         //Need to fix to get from file (testing for now)
-        String allCharacters = "ab/nc";
-
-        String[] lines = allCharacters.split("/n");
+        while(ingestedFile.hasNextLine()) {
+            String line = ingestedFile.nextLine();
+            for(int y = 0; y < line.length(); y++) {
+                char character = line.charAt(y);
+                allChar += character;
+            }
+        }
+        ingestedFile.close();
+        String[] lines = allChar.split("/n");
         for (String line : lines) {
             System.out.println(line);
             testDFA(line);
