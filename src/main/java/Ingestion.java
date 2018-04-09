@@ -20,7 +20,6 @@ public class Ingestion {
             while(ingestedFile.hasNextLine()) {
                 String line = ingestedFile.nextLine();
                 for (int y = 0; y < line.length(); y++) {
-//                    character = line.charAt(y);
                     //NEED TO FIX TO EXCLUDE /n
                     if (y < line.length()) {
                         if (line.charAt(y) == '/') {
@@ -28,7 +27,7 @@ public class Ingestion {
                                 y++;
                             }
                         } else {
-                            if (!alphabet.contains(line.charAt(y)) && !String.valueOf(y).equals("")) {
+                            if (!alphabet.contains(line.charAt(y)) && line.charAt(y) != ' ') {
                                 alphabet.add(line.charAt(y));
                             }
                         }
