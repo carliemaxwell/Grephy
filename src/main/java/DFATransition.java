@@ -57,7 +57,7 @@ public class DFATransition {
                 statesAndEclosures.put(y, eclosures);
             }
         }
-        System.out.println("Hashmap of states w/ eclosures " + statesAndEclosures);
+//        System.out.println("Hashmap of states w/ eclosures " + statesAndEclosures);
     }
 
 
@@ -190,18 +190,11 @@ public class DFATransition {
 
         //add to newStates in findSubset ends up doing all of the states eventually
         for(int g = 1; g < newStates.size(); g++) {
-            System.out.println("new state size " + newStates.size());
-            System.out.println(g);
+//            System.out.println("new state size " + newStates.size());
             findSubset(nfa, newStates.get(g));
         }
 
 
-        System.out.println("DFATransitions:");
-        for(int b = 0; b < dfaTransitions.size(); b++) {
-            System.out.println(dfaTransitions.get(b).prior + " " + dfa.dfaTransitions.get(b).next + " " + dfa.dfaTransitions.get(b).label);
-        }
-
-        Writer.writeToFileDFA(dfa);
         return dfa;
     }
 
@@ -220,16 +213,15 @@ public class DFATransition {
             }
         }
         ingestedFile.close();
-        System.out.println("all characters " + allChar);
+//        System.out.println("all characters " + allChar);
         String[] lines = allChar.split("/n");
         for (String line : lines) {
-            System.out.println(line);
+//            System.out.println(line);
             testDFA(line);
         }
     }
 
     public static void testDFA(String line) {
-        String acceptOrReject = "";
 
         List<Integer> startState;
 
@@ -240,7 +232,7 @@ public class DFATransition {
         statesIncluded.add(startState);
         for (int x = 0; x < dfaTransitions.size(); x++) {
             if (dfaTransitions.get(x).prior == startState) {
-                System.out.println(dfaTransitions.get(x).prior + " " + dfaTransitions.get(x).next);
+//                System.out.println(dfaTransitions.get(x).prior + " " + dfaTransitions.get(x).next);
                 if(y < line.length()) {
                     if (dfaTransitions.get(x).label == line.charAt(y)) {
                         //move on to next character
@@ -253,15 +245,9 @@ public class DFATransition {
             }
         }
 
-        System.out.println("All states " + statesIncluded);
-
         if(acceptingState.contains(statesIncluded.get(statesIncluded.size()-1))) {
-            acceptOrReject = "accept";
-        } else {
-            acceptOrReject = "reject";
+            System.out.println(line);
         }
-
-        System.out.println(acceptOrReject);
     }
 }
 

@@ -44,11 +44,11 @@ public class NFATransition {
         con.acceptingState = con.states.size() - 1;
 
         //TESTING
-        System.out.println("concat nfa size " + con.states.size());
-        System.out.println("concat accepting state " + con.acceptingState);
-        for (int x = 0; x < con.transitions.size(); x++) {
-            System.out.println("from " + con.transitions.get(x).prior + " to " + con.transitions.get(x).next + " symbol " + "to " + con.transitions.get(x).label);
-        }
+//        System.out.println("concat nfa size " + con.states.size());
+//        System.out.println("concat accepting state " + con.acceptingState);
+//        for (int x = 0; x < con.transitions.size(); x++) {
+//            System.out.println("from " + con.transitions.get(x).prior + " to " + con.transitions.get(x).next + " symbol " + "to " + con.transitions.get(x).label);
+//        }
 
         //return NFA to perform further operations
         return con;
@@ -90,11 +90,11 @@ public class NFATransition {
         unionNFA.acceptingState = unionNFA.states.size() - 1;
 
         //TESTING
-        System.out.println("union nfa size " + unionNFA.states.size());
-        System.out.println("union accepting state " + unionNFA.acceptingState);
-        for (int x = 0; x < unionNFA.transitions.size(); x++) {
-            System.out.println("from " + unionNFA.transitions.get(x).prior + " to " + unionNFA.transitions.get(x).next + " symbol " + "to " + unionNFA.transitions.get(x).label);
-        }
+//        System.out.println("union nfa size " + unionNFA.states.size());
+//        System.out.println("union accepting state " + unionNFA.acceptingState);
+//        for (int x = 0; x < unionNFA.transitions.size(); x++) {
+//            System.out.println("from " + unionNFA.transitions.get(x).prior + " to " + unionNFA.transitions.get(x).next + " symbol " + "to " + unionNFA.transitions.get(x).label);
+//        }
 
         //return NFA to perform further operations
         return unionNFA;
@@ -112,7 +112,7 @@ public class NFATransition {
         //new NFA has same states + 2 for the beginning and ending epsilon transitions
         starNFA.addStates(nfa.states.size() + 2);
 
-        System.out.println("star NFA states = " + starNFA.states.size());
+//        System.out.println("star NFA states = " + starNFA.states.size());
 
         //copy over the original transitions
         for(int x = 0; x< nfa.transitions.size(); x++) {
@@ -132,12 +132,12 @@ public class NFATransition {
         starNFA.acceptingState = starNFA.states.size()-1;
 
         //TESTING
-        System.out.println("star nfa size " + starNFA.states.size());
-        System.out.println("star accepting state " + starNFA.acceptingState);
-        System.out.println("star transition size " + starNFA.transitions.size());
-        for (int x = 0; x < starNFA.transitions.size(); x++) {
-            System.out.println("from " + starNFA.transitions.get(x).prior + " to " + starNFA.transitions.get(x).next + " symbol " + "to " + starNFA.transitions.get(x).label);
-        }
+//        System.out.println("star nfa size " + starNFA.states.size());
+//        System.out.println("star accepting state " + starNFA.acceptingState);
+//        System.out.println("star transition size " + starNFA.transitions.size());
+//        for (int x = 0; x < starNFA.transitions.size(); x++) {
+//            System.out.println("from " + starNFA.transitions.get(x).prior + " to " + starNFA.transitions.get(x).next + " symbol " + "to " + starNFA.transitions.get(x).label);
+//        }
 
         return starNFA;
     }
@@ -204,9 +204,9 @@ public class NFATransition {
                 System.out.println("Acceptable parameters = [-n NFA] [-d DFA] Regex File");
         }
 
-        System.out.println(file);
-        System.out.println(fileNameNFA);
-        System.out.println(fileNameDFA);
+//        System.out.println(file);
+//        System.out.println(fileNameNFA);
+//        System.out.println(fileNameDFA);
 
 
         //Creates alphabet used for DFA construction
@@ -226,6 +226,7 @@ public class NFATransition {
         Writer.writeToFileDFA(DFATransition.createDFA(nfa), fileNameDFA);
 
         //createLine calls testDFA to check for accept/reject
+        System.out.println("Accepted lines from the file: ");
         DFATransition.createLine(file);
 
     }

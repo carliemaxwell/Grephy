@@ -32,7 +32,7 @@ public class Ingestion {
                     }
                 }
             }
-            System.out.println("the alphabet is " + alphabet);
+//            System.out.println("the alphabet is " + alphabet);
             ingestedFile.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");

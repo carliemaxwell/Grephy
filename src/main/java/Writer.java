@@ -36,6 +36,7 @@ public class Writer {
                 System.out.println("Error");
             }
         }
+        System.out.println("Wrote NFA in DOT Language to " + fileName);
     }
 
     public static void writeToFileDFA(DFATransition dfa, String fileName) throws IOException {
@@ -91,5 +92,6 @@ public class Writer {
                 System.out.println("Error");
             }
         }
+        System.out.println("Wrote DFA in DOT Language to " + fileName);
     }
 }
