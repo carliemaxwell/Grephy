@@ -174,34 +174,60 @@ public class NFATransition {
 
     public static void main(String[] args) throws IOException {
 
+        String file = "";
+        String fileNameNFA = "";
+        String fileNameDFA = "";
 
-//        File file = new File(args[0]);
+        if (args.length >= 2 && args.length <= 6) {
+            if (args.length == 6) {
+                file = args[5];
+                fileNameNFA = args[1];
+                fileNameDFA = args[3];
+            } else if (args.length == 4) {
+                file = args[3];
+                if(args[0].equals("-n")) {
+                    fileNameNFA = args[1];
+                } else {
+                    fileNameNFA = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output";
+                }
+                if(args[0].equals("-d")) {
+                    fileNameDFA = args[1];
+                } else {
+                    fileNameDFA = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output";
+                }
+            } else if (args.length == 2) {
+                file = args[1];
+                fileNameNFA = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output";
+                fileNameDFA = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output";
+            }
+        } else {
+                System.out.println("Acceptable parameters = [-n NFA] [-d DFA] Regex File");
+        }
 
-        //NEED TO DO ARGS FOR Grep [-n NFA-FILE] [-d DFATransition-FILE] REGEX FILE
-        String file = "testFile";
+        System.out.println(file);
+        System.out.println(fileNameNFA);
+        System.out.println(fileNameDFA);
 
-        //GET ALPHABET FROM FILE
+
+        //Creates alphabet used for DFA construction
         Ingestion.alphabet(file);
 
-//        DFATransition.createLine();
-
-        //CREATE NFA'S TO TEST METHODS WITH
+        //Create basic NFAs to use methods on
         NFA a = new NFA('a');
         NFA b = new NFA('b');
         NFA c = new NFA('c');
 
-//        NFA nfa = concat(a,b);
+        //Change to test with
+        NFA nfa = union(concat(a,b), c);
 
-        DFATransition.createDFA(union(concat(a,b), c));
+        //createDFA calls eclosure(nfa) - makes Hashmap of eclosures for subset construction
+        //Writer methods in main method bc need args params for fileName
+        Writer.writeToFileNFA(nfa, fileNameNFA);
+        Writer.writeToFileDFA(DFATransition.createDFA(nfa), fileNameDFA);
 
+        //createLine calls testDFA to check for accept/reject
         DFATransition.createLine(file);
 
-        //TAKES IN PARAMS OF FILE
-//        DFATransition.createLine(Ingestion.alphabet());
-
-        //TEST OUTPUT METHODS
-//      writeToFile(concat(a,union(a, b)));
-//      DFATransition.writeToFileDFA(DFATransition.createDFA(union(a,b)));
     }
 }
 

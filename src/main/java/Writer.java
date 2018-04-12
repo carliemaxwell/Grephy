@@ -7,11 +7,12 @@ public class Writer {
 
 
 
-    public static void writeToFileNFA(NFA nfa) throws IOException {
+    public static void writeToFileNFA(NFA nfa, String fileName) throws IOException {
         BufferedWriter bw = null;
         try {
             String dotLanguage = "digraph graphname { ";
-            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output");
+            //CHANGE PATH TO PARAMETER - FROM ARGS
+            File file = new File(fileName);
             FileWriter fw = new FileWriter(file, true);
             bw = new BufferedWriter(fw);
             bw.write(dotLanguage);
@@ -37,11 +38,12 @@ public class Writer {
         }
     }
 
-    public static void writeToFileDFA(DFATransition dfa) throws IOException {
+    public static void writeToFileDFA(DFATransition dfa, String fileName) throws IOException {
         BufferedWriter bw = null;
         try {
             String dotLanguage = "digraph graphname { ";
-            File file = new File("/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output");
+            //CHANGE PATH TO PARAMETER - FROM ARGS
+            File file = new File(fileName);
             FileWriter fw = new FileWriter(file, true);
             bw = new BufferedWriter(fw);
             bw.write(dotLanguage);
