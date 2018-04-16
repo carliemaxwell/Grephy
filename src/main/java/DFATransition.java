@@ -205,20 +205,22 @@ public class DFATransition {
         Scanner ingestedFile = new Scanner(new FileInputStream(file));
         while(ingestedFile.hasNextLine()) {
             String line = ingestedFile.nextLine();
-            for(int y = 0; y < line.length(); y++) {
-                char character = line.charAt(y);
-                if(character != ' ') {
-                    allChar += character;
-                }
-            }
+            System.out.println("Line " + line);
+            testDFA(line);
+//            for(int y = 0; y < line.length(); y++) {
+//                char character = line.charAt(y);
+//                if(character != ' ') {
+//                    allChar += character;
+//                }
+//            }
         }
         ingestedFile.close();
 //        System.out.println("all characters " + allChar);
-        String[] lines = allChar.split("/n");
-        for (String line : lines) {
-//            System.out.println(line);
-            testDFA(line);
-        }
+//        String[] lines = allChar.split("/n");
+//        for (String line : lines) {
+////            System.out.println(line);
+//            testDFA(line);
+//        }
     }
 
     public static void testDFA(String line) {
