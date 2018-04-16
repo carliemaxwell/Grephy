@@ -19,20 +19,18 @@ public class Ingestion {
             while(ingestedFile.hasNextLine()) {
                 String line = ingestedFile.nextLine();
                 for (int y = 0; y < line.length(); y++) {
-                    if (y < line.length()) {
-                        if (line.charAt(y) == '/') {
-                            if (line.charAt(y + 1) == 'n') {
-                                y++;
-                            }
-                        } else {
-                            if (!alphabet.contains(line.charAt(y)) && line.charAt(y) != ' ') {
+//                    if (y < line.length()) {
+//                        if (line.charAt(y) == '/') {
+//                            if (line.charAt(y + 1) == 'n') {
+//                                y++;
+//                            }
+//                        } else {
+                            if (!alphabet.contains(line.charAt(y))) {
                                 alphabet.add(line.charAt(y));
                             }
-                        }
-                    }
                 }
             }
-//            System.out.println("the alphabet is " + alphabet);
+            System.out.println("the alphabet is " + alphabet);
             ingestedFile.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
