@@ -12,14 +12,16 @@ public class Writer {
         try {
             String dotLanguage = "digraph graphname { ";
             //CHANGE PATH TO PARAMETER - FROM ARGS
+//            File file = new File("./" + fileName);
             File file = new File(fileName);
+//            System.out.println(System.getProperty("user.dir"));
             FileWriter fw = new FileWriter(file, true);
             bw = new BufferedWriter(fw);
             bw.write(dotLanguage);
             bw.newLine();
             for(int x=0; x< nfa.transitions.size(); x++) {
                 bw.write(nfa.transitions.get(x).prior + "->" +
-                        nfa.transitions.get(x).next + "[label=" + nfa.transitions.get(x).label + "];");
+                        nfa.transitions.get(x).next + "[label=" + "\"" + nfa.transitions.get(x).label + "\""  + "];");
                 bw.newLine();
             }
             bw.write(nfa.acceptingState + "[shape=doublecircle];");
@@ -65,7 +67,7 @@ public class Writer {
                 String result2 = builder2.toString();
 
                 //NEED TO FIX TO BE A STRING FOR EACH STATE
-                bw.write(result + "->" + result2 + "[label=" + dfa.dfaTransitions.get(x).label + "];");
+                bw.write(result + "->" + result2 + "[label=" + "\"" + dfa.dfaTransitions.get(x).label + "\""  + "];");
                 bw.newLine();
             }
             //Do after so it only writes double circle once
