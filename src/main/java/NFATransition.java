@@ -29,7 +29,7 @@ public class NFATransition {
         //add in first nfa and all of second nfa except starting state
         con.addStates(first.states.size() + (second.states.size() - 1));
 
-        con.conAddTransitions(con, first, second);
+        con.addTransitions(con, first, second);
 
         //accepting state is last state that second goes to
         con.acceptingState = con.states.size() - 1;
@@ -47,7 +47,7 @@ public class NFATransition {
         //number of states in new NFA is first states + second states + 2 bc of the 2 epsilon transitions
         unionNFA.addStates(first.states.size() + second.states.size() + 2);
 
-        unionNFA.unionAddTransitions(unionNFA, first, second);
+        unionNFA.addTransitions(unionNFA, first, second, 1);
 
         //declare accepting state for new NFA
         unionNFA.acceptingState = unionNFA.states.size() - 1;
@@ -65,7 +65,7 @@ public class NFATransition {
         //new NFA has same states + 2 for the beginning and ending epsilon transitions
         starNFA.addStates(nfa.states.size() + 2);
 
-        starNFA.starAddTransitions(starNFA, nfa);
+        starNFA.addTransitions(starNFA, nfa);
 
         //declare accepting state
         starNFA.acceptingState = starNFA.states.size() - 1;

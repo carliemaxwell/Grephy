@@ -33,7 +33,7 @@ public class NFA {
         }
     }
 
-    public void conAddTransitions(NFA con, NFA first, NFA second) {
+    public void addTransitions(NFA con, NFA first, NFA second) {
         //put all of first into new DFATransition
         for (int x = 0; x < first.transitions.size(); x++) {
             con.transitions.add(first.transitions.get(x));
@@ -46,29 +46,32 @@ public class NFA {
         }
     }
 
-    public void unionAddTransitions(NFA unionNFA, NFA first, NFA second) {
-        //shift first nfa up 1 and add to unionNFA
-        for (int x = 0; x < first.transitions.size(); x++) {
-            unionNFA.transitions.add(new NFATransition(first.transitions.get(x).exit + 1,
-                    first.transitions.get(x).enter + 1, first.transitions.get(x).label));
+    public void addTransitions(NFA unionNFA, NFA first, NFA second, int num) {
+
+        if (num == 1) {
+            //shift first nfa up 1 and add to unionNFA
+            for (int x = 0; x < first.transitions.size(); x++) {
+                unionNFA.transitions.add(new NFATransition(first.transitions.get(x).exit + 1,
+                        first.transitions.get(x).enter + 1, first.transitions.get(x).label));
+            }
+
+            //shift second nfa up 1 + first state amount and add to unionNFA
+            for (int y = 0; y < second.transitions.size(); y++) {
+                unionNFA.transitions.add(new NFATransition(second.transitions.get(y).exit + first.states.size() + 1,
+                        second.transitions.get(y).enter + first.states.size() + 1, second.transitions.get(y).label));
+            }
+
+            //add beginning epsilons, need to shift first by 1 and second by amount in first+1
+            unionNFA.transitions.add(new NFATransition(0, 1, 'ε'));
+            unionNFA.transitions.add(new NFATransition(0, first.states.size() + 1, 'ε'));
+
+            //add ending epsilons
+            unionNFA.transitions.add(new NFATransition(first.states.size(), unionNFA.states.size() - 1, 'ε'));
+            unionNFA.transitions.add(new NFATransition(unionNFA.states.size() - 2, unionNFA.states.size() - 1, 'ε'));
         }
-
-        //shift second nfa up 1 + first state amount and add to unionNFA
-        for (int y = 0; y < second.transitions.size(); y++) {
-            unionNFA.transitions.add(new NFATransition(second.transitions.get(y).exit + first.states.size() + 1,
-                    second.transitions.get(y).enter + first.states.size() + 1, second.transitions.get(y).label));
-        }
-
-        //add beginning epsilons, need to shift first by 1 and second by amount in first+1
-        unionNFA.transitions.add(new NFATransition(0, 1, 'ε'));
-        unionNFA.transitions.add(new NFATransition(0, first.states.size() + 1, 'ε'));
-
-        //add ending epsilons
-        unionNFA.transitions.add(new NFATransition(first.states.size(), unionNFA.states.size() - 1, 'ε'));
-        unionNFA.transitions.add(new NFATransition(unionNFA.states.size() - 2, unionNFA.states.size() - 1, 'ε'));
     }
 
-    public void starAddTransitions(NFA starNFA, NFA nfa) {
+    public void addTransitions(NFA starNFA, NFA nfa) {
         //copy over the original transitions
         for (int x = 0; x < nfa.transitions.size(); x++) {
             starNFA.transitions.add(new NFATransition(nfa.transitions.get(x).exit + 1, nfa.transitions.get(x).enter + 1, nfa.transitions.get(x).label));
