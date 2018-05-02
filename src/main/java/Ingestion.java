@@ -14,7 +14,7 @@ public class Ingestion {
         try {
 //            System.out.println("Enter file name ");
 //            Scanner scanner = new Scanner(System.in);
-//            file = scanner.next();
+//            file = scanner.enter();
             Scanner ingestedFile = new Scanner(new FileInputStream(file));
             while(ingestedFile.hasNextLine()) {
                 String line = ingestedFile.nextLine();

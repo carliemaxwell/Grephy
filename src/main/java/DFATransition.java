@@ -30,11 +30,11 @@ public class DFATransition {
             List<Integer> eclosureSet = new ArrayList<Integer>();
             eclosureSet.add(a);
             for (int x = 0; x < nfa.transitions.size(); x++) {
-                if (nfa.transitions.get(x).prior == a) {
+                if (nfa.transitions.get(x).exit == a) {
                     currentTransition = nfa.transitions.get(x);
                     if (currentTransition.label == 'ε') {
-                        if (!eclosureSet.contains(currentTransition.next)) {
-                            eclosureSet.add(currentTransition.next);
+                        if (!eclosureSet.contains(currentTransition.enter)) {
+                            eclosureSet.add(currentTransition.enter);
                         }
                     }
                 }
@@ -79,10 +79,10 @@ public class DFATransition {
             for (int x = 0; x < eclosure.size(); x++) {
                 //Check if the transitions have that label
                 for (int z = 0; z < nfa.transitions.size(); z++) {
-                    if (nfa.transitions.get(z).prior == eclosure.get(x)) {
+                    if (nfa.transitions.get(z).exit == eclosure.get(x)) {
                         if (nfa.transitions.get(z).label == currentChar) {
-                            if (!newSubset.contains(nfa.transitions.get(x).next)) {
-                                List<Integer> eclosureOfNextState = returnEclosureSet(nfa.transitions.get(z).next);
+                            if (!newSubset.contains(nfa.transitions.get(x).enter)) {
+                                List<Integer> eclosureOfNextState = returnEclosureSet(nfa.transitions.get(z).enter);
                                 for (int a = 0; a < eclosureOfNextState.size(); a++) {
                                     newSubset.add(eclosureOfNextState.get(a));
                                 }
@@ -143,10 +143,10 @@ public class DFATransition {
             for (int x = 0; x < eclosure.size(); x++) {
                 //Check if the transitions have that label
                 for (int z = 0; z < nfa.transitions.size(); z++) {
-                    if (nfa.transitions.get(z).prior == eclosure.get(x)) {
+                    if (nfa.transitions.get(z).exit == eclosure.get(x)) {
                         if (nfa.transitions.get(z).label == currentChar) {
-                            if (!returnedStates.contains(nfa.transitions.get(x).next)) {
-                                List<Integer> eclosureOfNextState = returnEclosureSet(nfa.transitions.get(z).next);
+                            if (!returnedStates.contains(nfa.transitions.get(x).enter)) {
+                                List<Integer> eclosureOfNextState = returnEclosureSet(nfa.transitions.get(z).enter);
                                 for (int a = 0; a < eclosureOfNextState.size(); a++) {
                                     returnedStates.add(eclosureOfNextState.get(a));
                                 }
@@ -205,22 +205,9 @@ public class DFATransition {
         Scanner ingestedFile = new Scanner(new FileInputStream(file));
         while(ingestedFile.hasNextLine()) {
             String line = ingestedFile.nextLine();
-            System.out.println("Line " + line);
             testDFA(line);
-//            for(int y = 0; y < line.length(); y++) {
-//                char character = line.charAt(y);
-//                if(character != ' ') {
-//                    allChar += character;
-//                }
-//            }
         }
         ingestedFile.close();
-//        System.out.println("all characters " + allChar);
-//        String[] lines = allChar.split("/n");
-//        for (String line : lines) {
-////            System.out.println(line);
-//            testDFA(line);
-//        }
     }
 
     public static void testDFA(String line) {

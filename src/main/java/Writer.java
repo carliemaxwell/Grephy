@@ -19,9 +19,11 @@ public class Writer {
             bw = new BufferedWriter(fw);
             bw.write(dotLanguage);
             bw.newLine();
+            bw.write("rankdir=LR;");
+            bw.newLine();
             for(int x=0; x< nfa.transitions.size(); x++) {
-                bw.write(nfa.transitions.get(x).prior + "->" +
-                        nfa.transitions.get(x).next + "[label=" + "\"" + nfa.transitions.get(x).label + "\""  + "];");
+                bw.write(nfa.transitions.get(x).exit + "->" +
+                        nfa.transitions.get(x).enter + "[label=" + "\"" + nfa.transitions.get(x).label + "\""  + "];");
                 bw.newLine();
             }
             bw.write(nfa.acceptingState + "[shape=doublecircle];");
@@ -50,6 +52,8 @@ public class Writer {
             FileWriter fw = new FileWriter(file, true);
             bw = new BufferedWriter(fw);
             bw.write(dotLanguage);
+            bw.newLine();
+            bw.write("rankdir=LR;");
             bw.newLine();
             for (int x = 0; x < dfa.dfaTransitions.size(); x++) {
 

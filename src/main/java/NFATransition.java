@@ -28,9 +28,7 @@ public class NFATransition {
 
         //add in first nfa and all of second nfa except starting state
         con.addStates(first.states.size() + (second.states.size() - 1));
-
-        con.addTransitions(con, first, second);
-
+        con.conAddTransitions(con, first, second);
         //accepting state is last state that second goes to
         con.acceptingState = con.states.size() - 1;
 
@@ -46,9 +44,7 @@ public class NFATransition {
 
         //number of states in new NFA is first states + second states + 2 bc of the 2 epsilon transitions
         unionNFA.addStates(first.states.size() + second.states.size() + 2);
-
-        unionNFA.addTransitions(unionNFA, first, second, 1);
-
+        unionNFA.unionAddTransitions(unionNFA, first, second, 1);
         //declare accepting state for new NFA
         unionNFA.acceptingState = unionNFA.states.size() - 1;
 
@@ -64,51 +60,72 @@ public class NFATransition {
 
         //new NFA has same states + 2 for the beginning and ending epsilon transitions
         starNFA.addStates(nfa.states.size() + 2);
-
-        starNFA.addTransitions(starNFA, nfa);
-
+        starNFA.starAddTransitions(starNFA, nfa);
         //declare accepting state
         starNFA.acceptingState = starNFA.states.size() - 1;
 
         return starNFA;
     }
 
+    public static NFA combine(Stack<NFA> stackOfNFAS) {
+        while(stackOfNFAS.size() > 1) {
+            NFA second = stackOfNFAS.pop();
+            NFA op = stackOfNFAS.pop();
+            NFA first = stackOfNFAS.pop();
+            if(op instanceof UnionNFA) {
+                stackOfNFAS.push(NFATransition.union(first, second));
+            } else if(op instanceof ConcatNFA) {
+                stackOfNFAS.push(NFATransition.concat(first, second));
+            }
+        }
+        return stackOfNFAS.pop();
+    }
+
 
     public static NFA readRegex(String regex) {
 
-        Stack<Character> characters = new Stack<Character>();
-        Stack<Character> symbols = new Stack<Character>();
-        int parenthesisFrontIndex = 0;
-        int parenthesisBackIndex = 0;
+        Stack<Stack<NFA>> stackOfNFAStacks = new Stack<>();
+        Stack<NFA> currentStack = new Stack<>();
+        stackOfNFAStacks.push(currentStack);
+        boolean needToConcat = false;
 
         for (int x = 0; x < regex.length(); x++) {
             char currentChar = regex.charAt(x);
-            if (currentChar != '(' && currentChar != ')' && currentChar != '*' && currentChar != '|') {
-                characters.push(currentChar);
-            } else {
-                switch (currentChar) {
-                    case '(':
-                        symbols.push(currentChar);
-                        parenthesisFrontIndex = x;
-                        break;
-                    case ')':
-                        symbols.push(currentChar);
-                        parenthesisBackIndex = x;
-                        break;
-                    case '*':
-                        symbols.push(currentChar);
-                        break;
-                    case '|':
-                        symbols.push(currentChar);
-                        break;
-                }
+            switch (currentChar) {
+                case '*':
+                    currentStack.push(NFATransition.star(currentStack.pop()));
+                    needToConcat = true;
+                    break;
+                case '|':
+                    currentStack.push(new UnionNFA());
+                    needToConcat = false;
+                    break;
+                case '(':
+                    if (needToConcat) {
+                        currentStack.push(new ConcatNFA());
+                    }
+                    needToConcat = false;
+                    stackOfNFAStacks.push(new Stack<>());
+                    currentStack = stackOfNFAStacks.peek();
+                    break;
+                case ')':
+                    NFA combinedNFA = combine(currentStack);
+                    stackOfNFAStacks.pop();
+                    currentStack = stackOfNFAStacks.peek();
+                    currentStack.push(combinedNFA);
+                    break;
+                //single char
+                default:
+                    if (needToConcat) {
+                        currentStack.push(new ConcatNFA());
+                    }
+                    needToConcat = true;
+                    NFA singleChar = new NFA(currentChar);
+                    currentStack.push(singleChar);
+                    break;
             }
         }
-
-        System.out.println("characters " + characters);
-        System.out.println("symbols " + symbols);
-
-        return null;
+        return combine(currentStack);
     }
 }
 

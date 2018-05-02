@@ -27,13 +27,14 @@ public class NFA {
         this.addStates(2);
     }
 
+
     public void addStates(int size) {
         for(int x = 0; x < size; x++) {
             this.states.add(x);
         }
     }
 
-    public void addTransitions(NFA con, NFA first, NFA second) {
+    public void conAddTransitions(NFA con, NFA first, NFA second) {
         //put all of first into new DFATransition
         for (int x = 0; x < first.transitions.size(); x++) {
             con.transitions.add(first.transitions.get(x));
@@ -46,7 +47,7 @@ public class NFA {
         }
     }
 
-    public void addTransitions(NFA unionNFA, NFA first, NFA second, int num) {
+    public void unionAddTransitions(NFA unionNFA, NFA first, NFA second, int num) {
 
         if (num == 1) {
             //shift first nfa up 1 and add to unionNFA
@@ -71,7 +72,7 @@ public class NFA {
         }
     }
 
-    public void addTransitions(NFA starNFA, NFA nfa) {
+    public void starAddTransitions(NFA starNFA, NFA nfa) {
         //copy over the original transitions
         for (int x = 0; x < nfa.transitions.size(); x++) {
             starNFA.transitions.add(new NFATransition(nfa.transitions.get(x).exit + 1, nfa.transitions.get(x).enter + 1, nfa.transitions.get(x).label));
