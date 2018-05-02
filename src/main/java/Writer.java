@@ -43,7 +43,7 @@ public class Writer {
         System.out.println("Wrote NFA in DOT Language to " + fileName);
     }
 
-    public static void writeToFileDFA(DFATransition dfa, String fileName) throws IOException {
+    public static void writeToFileDFA(DFA dfa, String fileName) throws IOException {
         BufferedWriter bw = null;
         try {
             String dotLanguage = "digraph graphname { ";
@@ -98,6 +98,6 @@ public class Writer {
                 System.out.println("Error");
             }
         }
-        System.out.println("Wrote DFA in DOT Language to " + fileName);
+        System.out.println("Wrote DFATransition in DOT Language to " + fileName);
     }
 }

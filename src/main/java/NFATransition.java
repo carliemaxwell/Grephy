@@ -23,7 +23,7 @@ public class NFATransition {
 
     public static NFA concat(NFA first, NFA second) {
 
-        //create new DFATransition to combine the DFAs
+        //create new DFA to combine the DFAs
         NFA con = new NFA();
 
         //add in first nfa and all of second nfa except starting state

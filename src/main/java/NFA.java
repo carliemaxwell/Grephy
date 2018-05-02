@@ -35,7 +35,7 @@ public class NFA {
     }
 
     public void conAddTransitions(NFA con, NFA first, NFA second) {
-        //put all of first into new DFATransition
+        //put all of first into new DFA
         for (int x = 0; x < first.transitions.size(); x++) {
             con.transitions.add(first.transitions.get(x));
         }

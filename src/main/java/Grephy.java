@@ -36,12 +36,12 @@ public class Grephy {
                 fileNameDFA = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/Output";
             }
         } else {
-            System.out.println("Acceptable parameters = [-n NFATransition] [-d DFATransition] Regex File");
+            System.out.println("Acceptable parameters = [-n NFATransition] [-d DFA] Regex File");
         }
 
         System.out.println("regex is " + regex);
 
-        //Creates alphabet used for DFATransition construction
+        //Creates alphabet used for DFA construction
         Ingestion.alphabet(file);
 //
 //        //Create basic NFAs to use methods on - testing
@@ -59,11 +59,11 @@ public class Grephy {
 //        //createDFA calls eclosure(nfa) - makes Hashmap of eclosures for subset construction
 //        //Writer methods in main method bc need args params for fileName
         Writer.writeToFileNFA(nfa, fileNameNFA);
-        Writer.writeToFileDFA(DFATransition.createDFA(nfa), fileNameDFA);
+        Writer.writeToFileDFA(DFA.createDFA(nfa), fileNameDFA);
 //
 //        //createLine calls testDFA to check for/output accepted strings
         System.out.println("Accepted lines from the file: ");
-        DFATransition.createLine(file);
+        DFA.createLine(file);
 
     }
 }
