@@ -13,6 +13,7 @@ public class Writer {
             String dotLanguage = "digraph graphname { ";
             //CHANGE PATH TO PARAMETER - FROM ARGS
 //            File file = new File("./" + fileName);
+            fileName = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/" + fileName;
             File file = new File(fileName);
 //            System.out.println(System.getProperty("user.dir"));
             FileWriter fw = new FileWriter(file, true);
@@ -48,6 +49,7 @@ public class Writer {
         try {
             String dotLanguage = "digraph graphname { ";
             //CHANGE PATH TO PARAMETER - FROM ARGS
+            fileName = "/Users/carliemaxwell/GrephyFinalProject/src/main/Output/" + fileName;
             File file = new File(fileName);
             FileWriter fw = new FileWriter(file, true);
             bw = new BufferedWriter(fw);
