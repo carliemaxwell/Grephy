@@ -1,0 +1,31 @@
+digraph graphname { 
+rankdir=LR;
+0->1[label="a"];
+2->3[label="b"];
+4->5[label="c"];
+1->2[label="ε"];
+1->4[label="ε"];
+3->6[label="ε"];
+5->6[label="ε"];
+6[shape=doublecircle];
+}digraph graphname { 
+rankdir=LR;
+0->1[label="a"];
+2->3[label="b"];
+4->5[label="c"];
+1->2[label="ε"];
+1->4[label="ε"];
+3->6[label="ε"];
+5->6[label="ε"];
+6[shape=doublecircle];
+}digraph graphname { 
+rankdir=LR;
+1->2[label="a"];
+2->3[label="b"];
+4->5[label="c"];
+0->1[label="ε"];
+0->4[label="ε"];
+3->6[label="ε"];
+5->6[label="ε"];
+6[shape=doublecircle];
+}
