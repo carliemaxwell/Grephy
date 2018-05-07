@@ -41,8 +41,6 @@ public class Grephy {
 
         System.out.println("regex is " + regex);
 
-        file = file + ".txt";
-
         //Creates alphabet used for DFA construction
         Ingestion.alphabet(file);
 //
