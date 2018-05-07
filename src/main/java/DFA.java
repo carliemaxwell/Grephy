@@ -202,8 +202,11 @@ public class DFA {
     public static void createLine(String file) throws FileNotFoundException {
 
         Scanner ingestedFile = new Scanner(new FileInputStream(file));
-        while(ingestedFile.hasNextLine()) {
-            String line = ingestedFile.nextLine();
+
+        ingestedFile.useDelimiter("\n");
+
+        while(ingestedFile.hasNext()) {
+            String line = ingestedFile.next();
             testDFA(line);
         }
         ingestedFile.close();
@@ -214,6 +217,10 @@ public class DFA {
         List<Integer> startState;
 
         startState = dfaTransitions.get(0).prior;
+
+//        System.out.println("start state " + startState);
+//        System.out.println("current line " + line);
+
         for (int y = 0; y < line.length(); y++) {
             for (int x = 0; x < dfaTransitions.size(); x++) {
                 if (dfaTransitions.get(x).prior.equals(startState)
