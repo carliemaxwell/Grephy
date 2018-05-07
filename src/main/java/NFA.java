@@ -47,9 +47,8 @@ public class NFA {
         }
     }
 
-    public void unionAddTransitions(NFA unionNFA, NFA first, NFA second, int num) {
+    public void unionAddTransitions(NFA unionNFA, NFA first, NFA second) {
 
-        if (num == 1) {
             //shift first nfa up 1 and add to unionNFA
             for (int x = 0; x < first.transitions.size(); x++) {
                 unionNFA.transitions.add(new NFATransition(first.transitions.get(x).exit + 1,
@@ -69,7 +68,7 @@ public class NFA {
             //add ending epsilons
             unionNFA.transitions.add(new NFATransition(first.states.size(), unionNFA.states.size() - 1, 'ε'));
             unionNFA.transitions.add(new NFATransition(unionNFA.states.size() - 2, unionNFA.states.size() - 1, 'ε'));
-        }
+
     }
 
     public void starAddTransitions(NFA starNFA, NFA nfa) {

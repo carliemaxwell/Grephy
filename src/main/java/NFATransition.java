@@ -44,7 +44,7 @@ public class NFATransition {
 
         //number of states in new NFA is first states + second states + 2 bc of the 2 epsilon transitions
         unionNFA.addStates(first.states.size() + second.states.size() + 2);
-        unionNFA.unionAddTransitions(unionNFA, first, second, 1);
+        unionNFA.unionAddTransitions(unionNFA, first, second);
         //declare accepting state for new NFA
         unionNFA.acceptingState = unionNFA.states.size() - 1;
 
