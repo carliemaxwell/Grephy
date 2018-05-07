@@ -22,6 +22,10 @@ public class Writer {
             bw.newLine();
             bw.write("rankdir=LR;");
             bw.newLine();
+            bw.write(-2 + "->" + 0);
+            bw.newLine();
+            bw.write(-2 + "[style=invisible];");
+            bw.newLine();
             for(int x=0; x< nfa.transitions.size(); x++) {
                 bw.write(nfa.transitions.get(x).exit + "->" +
                         nfa.transitions.get(x).enter + "[label=" + "\"" + nfa.transitions.get(x).label + "\""  + "];");
@@ -56,6 +60,15 @@ public class Writer {
             bw.write(dotLanguage);
             bw.newLine();
             bw.write("rankdir=LR;");
+            bw.newLine();
+            StringBuilder builderStartArrow = new StringBuilder();
+            for (int i = 0; i < dfa.dfaTransitions.get(0).prior.size(); i++) {
+                builderStartArrow.append(dfa.dfaTransitions.get(0).prior.get(i));
+            }
+            String resultStartArrow = builderStartArrow.toString();
+            bw.write(-2+ "->" + resultStartArrow);
+            bw.newLine();
+            bw.write(-2 + "[style=invisible];");
             bw.newLine();
             for (int x = 0; x < dfa.dfaTransitions.size(); x++) {
 
